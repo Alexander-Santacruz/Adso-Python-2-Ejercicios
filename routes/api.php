@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AreaController;
-use App\Http\Controllers\ComputerController;
-use App\Http\Controllers\ApprenticeController;
 
 Route::get('/adminsena', function () {
     return response()->json([
@@ -13,6 +10,10 @@ Route::get('/adminsena', function () {
     ]);
 });
 
-Route::apiResource('areas', AreaController::class);
-Route::apiResource('computers', ComputerController::class);
-Route::apiResource('apprentices', ApprenticeController::class);
+// Endpoints API basados en el frontend de AdminSena
+Route::apiResource('areas', App\Http\Controllers\AreaController::class);
+Route::apiResource('apprentices', App\Http\Controllers\ApprenticeController::class);
+Route::apiResource('courses', App\Http\Controllers\CourseController::class);
+Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
+Route::apiResource('computers', App\Http\Controllers\ComputerController::class);
+Route::apiResource('training-centers', App\Http\Controllers\TrainingCenterController::class);
