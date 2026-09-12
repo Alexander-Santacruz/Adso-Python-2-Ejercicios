@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Rutas de la API de Laravel
 Route::get('/adminsena', function () {
     return response()->json([
         'status' => 'success',
@@ -16,11 +15,7 @@ Route::post('categories', [App\Http\Controllers\CategoryController::class, 'stor
 Route::get('courses', [App\Http\Controllers\CourseController::class, 'index']);
 Route::post('courses', [App\Http\Controllers\CourseController::class, 'store']);
 
-// Ruta comodín para que el Frontend de React (SPA) maneje las vistas en XAMPP
+// Redirigir o servir index.html para React SPA
 Route::get('/{any?}', function () {
-    $path = public_path('index.html');
-    if (File::exists($path)) {
-        return File::get($path);
-    }
-    abort(404);
+    return view('welcome');
 })->where('any', '.*');
