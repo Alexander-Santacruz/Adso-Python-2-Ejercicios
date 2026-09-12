@@ -12,8 +12,8 @@ Route::get('/adminsena', function () {
     ]);
 });
 
-Route::get('categories', [CategoryController::class, 'index']);
-Route::post('categories', [CategoryController::class, 'store']);
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::post('/categories', [CategoryController::class, 'store']);
 
-Route::get('courses', [CourseController::class, 'index']);
-Route::post('courses', [CourseController::class, 'store']);
+Route::get('/courses', [CourseController::class, 'index']);
+Route::post('/courses', [CourseController::class, 'store']);
