@@ -13,7 +13,7 @@ export const Footer = () => {
             <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem' }}>Ficha: 3223899</p>
           </div>
 
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ display: 'none' }}>
             <h3 style={{ margin: '0 0 0.25rem 0', color: '#39A900' }}>Admin SENA</h3>
             <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem' }}>
               Panel de Administración Académica
