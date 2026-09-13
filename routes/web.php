@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/adminsena', function () {
     return response()->json([
@@ -10,12 +13,17 @@ Route::get('/adminsena', function () {
     ]);
 });
 
-Route::get('categories', [App\Http\Controllers\CategoryController::class, 'index']);
-Route::post('categories', [App\Http\Controllers\CategoryController::class, 'store']);
-Route::get('courses', [App\Http\Controllers\CourseController::class, 'index']);
-Route::post('courses', [App\Http\Controllers\CourseController::class, 'store']);
+// Autenticación y Registro de Usuarios
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// Redirigir o servir index.html para React SPA
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::post('/categories', [CategoryController::class, 'store']);
+
+Route::get('/courses', [CourseController::class, 'index']);
+Route::post('/courses', [CourseController::class, 'store']);
+
+// Ruta comodín SPA para React
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any', '.*');
