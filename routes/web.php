@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\AuthController;
 
+// Rutas API
 Route::get('/adminsena', function () {
     return response()->json([
         'status' => 'success',
@@ -13,17 +11,16 @@ Route::get('/adminsena', function () {
     ]);
 });
 
-// Autenticación y Registro de Usuarios
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::post('/categories', [CategoryController::class, 'store']);
+Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index']);
+Route::post('/categories', [App\Http\Controllers\CategoryController::class, 'store']);
 
-Route::get('/courses', [CourseController::class, 'index']);
-Route::post('/courses', [CourseController::class, 'store']);
+Route::get('/courses', [App\Http\Controllers\CourseController::class, 'index']);
+Route::post('/courses', [App\Http\Controllers\CourseController::class, 'store']);
 
-// Ruta comodín SPA para React
+// Ruta comodín para que Laravel devuelva la vista principal de la aplicación
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any', '.*');
