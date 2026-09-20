@@ -52,7 +52,7 @@ class AuthController extends Controller
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'avatar' => 'https://via.placeholder.com/38'
+                'avatar' => 'https://i.ibb.co/30Z041P/astronaut-dog.png'
             ]
         ]);
     }
