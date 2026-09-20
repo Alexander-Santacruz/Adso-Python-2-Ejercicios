@@ -1,13 +1,13 @@
 -- ========================================================
--- Script SQL Integral para MySQL (XAMPP) - Admin Sena
+-- Script SQL Integral para MySQL (XAMPP) - Base de datos 'laravel'
 -- Instructor exclusivo: David Santacruz (davidalexanderchangosantacruz@gmail.com)
 -- Aprendices: Mínimo 10 con el resto de correos institucionales
 -- ========================================================
 
-create database if not exists admin_sena;
-use admin_sena;
+create database if not exists laravel;
+use laravel;
 
--- Limpieza de tablas previas en orden de dependencias
+-- Limpieza de tablas de negocio previas
 drop table if exists aprendices;
 drop table if exists instructores;
 drop table if exists cursos;
