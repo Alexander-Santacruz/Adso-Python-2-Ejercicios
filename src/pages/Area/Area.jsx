@@ -5,7 +5,7 @@ export default function Area() {
   const [areas, setAreas] = useState([]);
   const [form, setForm] = useState({ name: '', description: '' });
   const [showForm, setShowForm] = useState(false);
-  const [message, setMessage] = useState('');
+  const [jsonResponse, setJsonResponse] = useState(null);
 
   const fetchAreas = async () => {
     try {
@@ -29,17 +29,18 @@ export default function Area() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
+      const data = await res.json();
       if (res.ok) {
-        setMessage('Área creada exitosamente');
+        setJsonResponse(data);
         setForm({ name: '', description: '' });
         setShowForm(false);
         fetchAreas();
       } else {
-        setMessage('Error al crear área');
+        setJsonResponse({ error: 'Error al crear área', details: data });
       }
     } catch (error) {
       console.error('Error:', error);
-      setMessage('Error de conexión');
+      setJsonResponse({ error: 'Error de conexión' });
     }
   };
 
@@ -55,8 +56,6 @@ export default function Area() {
         </button>
       </div>
 
-      {message && <p className="message" style={{ color: '#137333', background: '#e6f4ea', padding: '10px', borderRadius: '6px' }}>{message}</p>}
-      
       {showForm && (
         <form onSubmit={handleSubmit} className="area-form" style={{ display: 'flex', flexDirection: 'column', gap: '15px', background: '#f8fafc', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '30px' }}>
           <h3 style={{ margin: '0 0 10px 0', color: '#1e293b' }}>Registrar Nueva Área</h3>
@@ -77,6 +76,16 @@ export default function Area() {
           />
           <button type="submit" style={{ padding: '10px', background: '#1565c0', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Guardar Área</button>
         </form>
+      )}
+
+      {jsonResponse && (
+        <div style={{ background: '#1e293b', color: '#38bdf8', padding: '15px', borderRadius: '8px', marginBottom: '25px', fontFamily: 'monospace' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#94a3b8' }}>
+            <span>📄 Respuesta JSON del Servidor (API):</span>
+            <button onClick={() => setJsonResponse(null)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer' }}>✖ Cerrar</button>
+          </div>
+          <pre style={{ margin: 0, overflowX: 'auto' }}>{JSON.stringify(jsonResponse, null, 2)}</pre>
+        </div>
       )}
 
       <div className="area-list">
