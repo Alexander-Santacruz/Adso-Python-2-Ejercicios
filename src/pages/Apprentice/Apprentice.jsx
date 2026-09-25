@@ -1,68 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import './Apprentice.css';
 
 export const Apprentice = () => {
   const [apprentices, setApprentices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({ name: '', email: '', ficha: '' });
+  const [showForm, setShowForm] = useState(false);
+  const [jsonResponse, setJsonResponse] = useState(null);
+
+  const fetchApprentices = async () => {
+    try {
+      const res = await fetch('/api/apprentices');
+      const data = await res.json();
+      setApprentices(data);
+    } catch (error) {
+      console.error('Error al cargar aprendices:', error);
+    }
+  };
 
   useEffect(() => {
     fetchApprentices();
   }, []);
 
-  const fetchApprentices = async () => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/apprentices');
-      const data = await response.json();
-      setApprentices(data || [
-        { id: 1, nombre: 'Carlos Alberto Pérez', correo: 'caperez@sena.edu.co' },
-        { id: 2, nombre: 'María Fernanda Gómez', correo: 'mfgomez@sena.edu.co' },
-        { id: 3, nombre: 'Jorge Enrique Ramírez', correo: 'jeramirez@sena.edu.co' },
-        { id: 4, nombre: 'Ana Milena Torres', correo: 'amtorres@sena.edu.co' },
-        { id: 5, nombre: 'Luis Fernando Castro', correo: 'lfcastro@sena.edu.co' },
-        { id: 6, nombre: 'Claudia Patricia Ruiz', correo: 'cpruiz@sena.edu.co' },
-        { id: 7, nombre: 'Héctor Fabio Vargas', correo: 'hfvargas@sena.edu.co' },
-        { id: 8, nombre: 'Diana Marcela Herrera', correo: 'dmherrera@sena.edu.co' },
-        { id: 9, nombre: 'Esteban David Orozco', correo: 'edorozco@sena.edu.co' },
-        { id: 10, nombre: 'Valentina Morales Restrepo', correo: 'v.morales@sena.edu.co' },
-        { id: 11, nombre: 'Mateo Alejandro Silva', correo: 'mateo.silva@misena.edu.co' }
-      ]);
+      const res = await fetch('/api/apprentices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setJsonResponse(data);
+        setForm({ name: '', email: '', ficha: '' });
+        setShowForm(false);
+        fetchApprentices();
+      } else {
+        setJsonResponse({ error: 'Error al crear aprendiz', details: data });
+      }
     } catch (error) {
-      console.error('Error al conectar con la API de Laravel:', error);
-      setApprentices([
-        { id: 1, nombre: 'Carlos Alberto Pérez', correo: 'caperez@sena.edu.co' },
-        { id: 2, nombre: 'María Fernanda Gómez', correo: 'mfgomez@sena.edu.co' },
-        { id: 3, nombre: 'Jorge Enrique Ramírez', correo: 'jeramirez@sena.edu.co' },
-        { id: 4, nombre: 'Ana Milena Torres', correo: 'amtorres@sena.edu.co' },
-        { id: 5, nombre: 'Luis Fernando Castro', correo: 'lfcastro@sena.edu.co' },
-        { id: 6, nombre: 'Claudia Patricia Ruiz', correo: 'cpruiz@sena.edu.co' },
-        { id: 7, nombre: 'Héctor Fabio Vargas', correo: 'hfvargas@sena.edu.co' },
-        { id: 8, nombre: 'Diana Marcela Herrera', correo: 'dmherrera@sena.edu.co' },
-        { id: 9, nombre: 'Esteban David Orozco', correo: 'edorozco@sena.edu.co' },
-        { id: 10, nombre: 'Valentina Morales Restrepo', correo: 'v.morales@sena.edu.co' },
-        { id: 11, nombre: 'Mateo Alejandro Silva', correo: 'mateo.silva@misena.edu.co' }
-      ]);
+      console.error('Error:', error);
+      setJsonResponse({ error: 'Error de conexión' });
     }
-    setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '40px auto', padding: '20px', fontFamily: 'Segoe UI, sans-serif' }}>
-      <h2 style={{ color: '#39A900', borderBottom: '2px solid #39A900', paddingBottom: '10px' }}>Listado de Aprendices SENA (Admin Sena)</h2>
-      
-      {loading ? (
-        <p>Cargando aprendices...</p>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '15px', marginTop: '20px' }}>
-          {apprentices.map((item) => (
-            <div key={item.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: '12px', background: '#edf2f7', color: '#4a5568', padding: '2px 8px', borderRadius: '10px', fontWeight: 'bold' }}>Aprendiz ADSO</span>
-              <h4 style={{ margin: '10px 0 5px 0', color: '#2d3748' }}>{item.nombre}</h4>
-              <p style={{ margin: 0, color: '#718096', fontSize: '14px' }}>✉️ {item.correo}</p>
-            </div>
-          ))}
+    <div style={{ padding: '30px', maxWidth: '800px', margin: '0 auto', fontFamily: 'Segoe UI, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #39A900', paddingBottom: '10px' }}>
+        <h2 style={{ color: '#39A900', margin: 0 }}>Gestión de Aprendices SENA</h2>
+        <button 
+          onClick={() => setShowForm(!showForm)} 
+          style={{ padding: '10px 20px', background: '#39A900', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          {showForm ? 'Cancelar' : '+ Añadir Nuevo Aprendiz'}
+        </button>
+      </div>
+
+      {showForm && (
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', background: '#f8fafc', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '30px' }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#1e293b' }}>Registrar Nuevo Aprendiz</h3>
+          <input 
+            type="text" 
+            placeholder="Nombre completo" 
+            value={form.name} 
+            onChange={(e) => setForm({ ...form, name: e.target.value })} 
+            required 
+            style={{ padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
+          />
+          <input 
+            type="email" 
+            placeholder="Correo electrónico" 
+            value={form.email} 
+            onChange={(e) => setForm({ ...form, email: e.target.value })} 
+            required 
+            style={{ padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
+          />
+          <input 
+            type="text" 
+            placeholder="Número de Ficha" 
+            value={form.ficha} 
+            onChange={(e) => setForm({ ...form, ficha: e.target.value })} 
+            required 
+            style={{ padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
+          />
+          <button type="submit" style={{ padding: '10px', background: '#1565c0', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Guardar Aprendiz</button>
+        </form>
+      )}
+
+      {jsonResponse && (
+        <div style={{ background: '#1e293b', color: '#38bdf8', padding: '15px', borderRadius: '8px', marginBottom: '25px', fontFamily: 'monospace' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#94a3b8' }}>
+            <span>📄 Respuesta JSON del Servidor (API):</span>
+            <button onClick={() => setJsonResponse(null)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer' }}>✖ Cerrar</button>
+          </div>
+          <pre style={{ margin: 0, overflowX: 'auto' }}>{JSON.stringify(jsonResponse, null, 2)}</pre>
         </div>
       )}
+
+      <div>
+        <h3 style={{ color: '#1e293b' }}>Aprendices Registrados</h3>
+        {apprentices.length === 0 ? (
+          <p style={{ color: '#64748b' }}>No hay aprendices registrados actualmente.</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px', marginTop: '15px' }}>
+            {apprentices.map((item) => (
+              <div key={item.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                <span style={{ fontSize: '12px', background: '#e6f4ea', color: '#137333', padding: '2px 8px', borderRadius: '10px', fontWeight: 'bold' }}>Ficha: {item.ficha}</span>
+                <h4 style={{ margin: '10px 0 5px 0', color: '#2d3748' }}>{item.name}</h4>
+                <p style={{ margin: 0, color: '#718096', fontSize: '14px' }}>✉️ {item.email}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

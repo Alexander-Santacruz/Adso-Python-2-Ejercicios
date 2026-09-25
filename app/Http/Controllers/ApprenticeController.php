@@ -3,46 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Apprentice;
 
 class ApprenticeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Apprentice::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:apprentices',
+            'ficha' => 'required|string|max:50'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $apprentice = Apprentice::create($request->all());
+        return response()->json([
+            'message' => 'Aprendiz creado exitosamente',
+            'data' => $apprentice
+        ], 201);
     }
 }
