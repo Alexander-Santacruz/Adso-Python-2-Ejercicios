@@ -26,4 +26,14 @@ class InstructorController extends Controller
             'data' => $instructor
         ], 201);
     }
+
+    public function destroy(string $id)
+    {
+        $instructor = Instructor::find($id);
+        if (!$instructor) {
+            return response()->json(['message' => 'Instructor no encontrado'], 404);
+        }
+        $instructor->delete();
+        return response()->json(['message' => 'Instructor eliminado exitosamente']);
+    }
 }

@@ -25,4 +25,14 @@ class TrainingCenterController extends Controller
             'data' => $center
         ], 201);
     }
+
+    public function destroy(string $id)
+    {
+        $center = TrainingCenter::find($id);
+        if (!$center) {
+            return response()->json(['message' => 'Centro no encontrado'], 404);
+        }
+        $center->delete();
+        return response()->json(['message' => 'Centro eliminado exitosamente']);
+    }
 }

@@ -23,4 +23,14 @@ class CourseController extends Controller
         $course = Course::create($request->all());
         return response()->json($course);
     }
+
+    public function destroy(string $id)
+    {
+        $course = Course::find($id);
+        if (!$course) {
+            return response()->json(['message' => 'Curso no encontrado'], 404);
+        }
+        $course->delete();
+        return response()->json(['message' => 'Curso eliminado exitosamente']);
+    }
 }

@@ -26,4 +26,14 @@ class ApprenticeController extends Controller
             'data' => $apprentice
         ], 201);
     }
+
+    public function destroy(string $id)
+    {
+        $apprentice = Apprentice::find($id);
+        if (!$apprentice) {
+            return response()->json(['message' => 'Aprendiz no encontrado'], 404);
+        }
+        $apprentice->delete();
+        return response()->json(['message' => 'Aprendiz eliminado exitosamente']);
+    }
 }
