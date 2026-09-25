@@ -7,6 +7,7 @@ import { Home } from './pages/Home/Home'
 import { About } from './pages/About/About'
 import Area from './pages/Area/Area'
 import { Teacher } from './pages/Teacher/Teacher'
+import Course from './pages/Course/Course'
 
 const App = () => {
   return (
@@ -19,6 +20,8 @@ const App = () => {
         <Route path="/area/create" element={<Area/>}/>
         <Route path="/teacher" element={<Teacher/>}/>
         <Route path="/teacher/create" element={<Teacher/>}/>
+        <Route path="/course" element={<Course/>}/>
+        <Route path="/course/create" element={<Course/>}/>
       </Routes>
       <Footer/>
     </>
