@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Area;
 
 class AreaController extends Controller
 {
@@ -11,7 +12,7 @@ class AreaController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Area::all());
     }
 
     /**
@@ -19,7 +20,17 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $area = Area::create($request->all());
+
+        return response()->json([
+            'message' => 'Área creada exitosamente',
+            'data' => $area
+        ], 210); // status or 201
     }
 
     /**
